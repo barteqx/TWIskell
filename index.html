@@ -1,0 +1,366 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="StyleSheet" type="text/css" href="index_files/index.css">
+<title>Pracownia z Programowania 2012: Zadanie 2</title>
+</head>
+<body>
+<h2>Pracownia nr 2 z Programowania 2012</h2>
+
+<p>Rozwiązanie należy <a href="https://kno.ii.uni.wroc.pl/ii/mod/assignment/view.php?id=7438" target="_top">zgłosić</a> w&nbsp;systemie <a href="https://kno.ii.uni.wroc.pl/ii/course/view.php?id=181" target="_top">KNO</a> nie później niż <span style="text-decoration: line-through">20&nbsp;maja&nbsp;2012</span> 3&nbsp;czerwca&nbsp;2012
+o&nbsp;godzinie&nbsp;23:54. <i>Nie ma możliwości zgłoszenia rozwiązania
+po upływie tego terminu!</i> Przed upływem tego terminu można zgłaszać poprawione wersje już zgłoszonego rozwiązania.</p>
+
+<p>Uwaga: mimo dołożenia wszelkich starań, by tekst poniższy nie
+zawierał błędów, w&nbsp;poniższej specyfikacji mogą wystąpić
+niekonsekwencje, pomyłki lub niejednoznaczności.  W&nbsp;razie
+wątpliwości należy porozumieć się z&nbsp;wykładowcą.</p>
+
+<p>Proszę napisać w&nbsp;Prologu interpreter opisanego niżej języka
+deklaratywnego. Po uruchomieniu interpreter wypisuje znak zachęty
+„<tt>&gt;</tt>” i&nbsp;czeka na polecenie. Należy zaimplementować
+następujące polecenia:</p>
+
+<dl>
+<dt><tt>:l&nbsp;</tt>&lt;<i>nazwa pliku</i>&gt;</dt>
+<dd>wczytuje program o&nbsp;podanej nazwie, po czym oczekuje na dalsze
+    polecenia. Wczytanie kolejnego pliku powoduje zastąpienie definicji
+    wcześniej zdefiniowanych wartości nowymi i&nbsp;dodanie do
+    środowiska definicji wartości nie występujących we wcześniejszych
+    plikach;</dd>
+<dt><tt>:e&nbsp;</tt>&lt;<i>wyrażenie</i>&gt;</dt>
+<dd>wylicza i&nbsp;wypisuje wartość podanego wyrażenia, po czym oczekuje
+    na dalsze polecenia;</dd>
+<dt><tt>:q</tt></dt>
+<dd>kończy działanie programu. Ten sam efekt uzyskamy zamykając strumień
+    wejściowy, tj.&nbsp;naciskając klawisz <tt>&lt;ctrl&gt;-D</tt>.</dd>
+</dl>
+
+<h3>Opis języka</h3>
+
+<h4>Składnia</h4>
+
+<h5>Struktura leksykalna</h5>
+
+<p><em>Literał całkowitoliczbowy</em> to niepusty ciąg cyfr
+dziesiętnych.  <em>Identyfikator</em> to ciąg liter i&nbsp;cyfr oraz
+znaków <tt>_</tt> i&nbsp;<tt>'</tt> zaczynający się literą.  Pozostałe
+tokeny języka, to: <tt>where</tt>, <tt>{</tt>, <tt>}</tt>, <tt>;</tt>,
+<tt>\</tt>, <tt>-&gt;</tt>, <tt>(</tt>, <tt>)</tt>, <tt>&lt;</tt>,
+<tt>&gt;</tt>, <tt>&lt;=</tt>, <tt>&gt;=</tt>, <tt>=</tt>, <tt>/=</tt>,
+<tt>+</tt>, <tt>-</tt>, <tt>*</tt>, <tt>div</tt>, <tt>mod</tt>.
+Najdłuższy ciąg znaków, który jest poprawnie zbudowanym tokenem, jest
+traktowany jako pojedynczy token (zatem np. <tt>&lt;=</tt> to pojedynczy
+token „mniejsze bądź równe” a&nbsp;nie para tokenów „mniejsze”
+i&nbsp;„równe”).  Tokeny mogą (a&nbsp;niekiedy muszą) być oddzielane
+białymi znakami: spacjami, znakami tabulacji poziomej i&nbsp;nowego
+wiersza. W&nbsp;programach można używać komentarzy zaczynających się
+znakami <tt>--</tt> i&nbsp;rozciągających się aż do najbliższego znaku
+końca wiersza.  Komentarze są traktowane tak samo, jak pojedynczy biały
+znak.</p>
+
+<h5>Struktura gramatyczna</h5>
+
+<table class="gram">
+<tbody><tr>
+<td class="l">&lt;program&gt;</td>
+<td class="c">→</td>
+<td class="r">&lt;puste&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;program&gt;</td>
+<td class="c">→</td>
+<td class="r">&lt;klauzula&gt;&nbsp;&lt;program&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;klauzule&gt;</td>
+<td class="c">→</td>
+<td class="r">&lt;klauzula&gt;&nbsp;</td>
+</tr>
+<tr>
+<td class="l">&lt;klauzule&gt;</td>
+<td class="c">→</td>
+<td class="r"><tt>{</tt>&nbsp;&lt;program&gt;&nbsp;<tt>}</tt></td>
+</tr>
+<tr>
+<td class="l">&lt;klauzula&gt;</td>
+<td class="c">→</td>
+<td class="r">&lt;głowa klauzuli&gt;&nbsp;<tt>=</tt>&nbsp;&lt;wyrażenie&gt;&nbsp;&lt;deklaracje lokalne&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;deklaracje lokalne&gt;</td>
+<td class="c">→</td>
+<td class="r"><tt>;</tt></td>
+</tr>
+<tr>
+<td class="l">&lt;deklaracje lokalne&gt;</td>
+<td class="c">→</td>
+<td class="r"><tt>where</tt>&nbsp;&lt;klauzule&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;głowa klauzuli&gt;</td>
+<td class="c">→</td>
+<td class="r">&lt;zmienna&gt;&nbsp;&lt;parametry&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;parametry&gt;</td>
+<td class="c">→</td>
+<td class="r">&lt;puste&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;parametry&gt;</td>
+<td class="c">→</td>
+<td class="r">&lt;parametr&gt;&nbsp;&lt;parametry&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;parametr&gt;</td>
+<td class="c">→</td>
+<td class="r">&lt;zmienna&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;parametr&gt;</td>
+<td class="c">→</td>
+<td class="r">&lt;konstruktor&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;parametr&gt;</td>
+<td class="c">→</td>
+<td class="r"><tt>(</tt>&nbsp;&lt;wzorzec&gt;&nbsp;<tt>)</tt></td>
+</tr>
+<tr>
+<td class="l">&lt;wzorzec&gt;</td>
+<td class="c">→</td>
+<td class="r">&lt;zmienna&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;wzorzec&gt;</td>
+<td class="c">→</td>
+<td class="r">&lt;konstruktor&gt;&nbsp;&lt;parametry&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;wyrażenie&gt;</td>
+<td class="c">→</td>
+<td class="r"><tt>\</tt>&nbsp;&lt;zmienna&gt;&nbsp;<tt>-&gt;</tt>&nbsp;&lt;wyrażenie&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;wyrażenie&gt;</td>
+<td class="c">→</td>
+<td class="r">&lt;wyrażenie proste&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;wyrażenie proste&gt;</td>
+<td class="c">→</td>
+<td class="r">&lt;wyrażenie proste&gt;&nbsp;&lt;operator binarny&gt;&nbsp;&lt;wyrażenie proste&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;wyrażenie proste&gt;</td>
+<td class="c">→</td>
+<td class="r">&lt;aplikacja&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;aplikacja&gt;</td>
+<td class="c">→</td>
+<td class="r">&lt;aplikacja&gt;&nbsp;&lt;wyrażenie atomowe&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;aplikacja&gt;</td>
+<td class="c">→</td>
+<td class="r">&lt;wyrażenie atomowe&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;wyrażenie atomowe&gt;</td>
+<td class="c">→</td>
+<td class="r"><tt>(</tt>&nbsp;&lt;wyrażenie&gt;&nbsp;<tt>)</tt></td>
+</tr>
+<tr>
+<td class="l">&lt;wyrażenie atomowe&gt;</td>
+<td class="c">→</td>
+<td class="r">&lt;zmienna&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;wyrażenie atomowe&gt;</td>
+<td class="c">→</td>
+<td class="r">&lt;konstruktor&gt;</td>
+</tr>
+<tr>
+<td class="l">&lt;zmienna&gt;</td>
+<td class="c">→</td>
+<td class="r"> <i>identyfikator zaczynający się małą literą</i></td>
+</tr>
+<tr>
+<td class="l">&lt;konstruktor&gt;</td>
+<td class="c">→</td>
+<td class="r"><i>identyfikator zaczynający się wielką literą</i></td>
+</tr>
+<tr>
+<td class="l">&lt;konstruktor&gt;</td>
+<td class="c">→</td>
+<td class="r"><i>literał całkowitoliczbowy</i></td>
+</tr>
+<tr>
+<td class="l">&lt;operator binarny&gt;</td>
+<td class="c">→</td>
+<td class="r"><tt>&lt;</tt>&nbsp;|&nbsp;<tt>&gt;</tt>&nbsp;|&nbsp;<tt>&lt;=</tt>&nbsp;|&nbsp;<tt>&gt;=</tt>&nbsp;|&nbsp;<tt>=</tt>&nbsp;|&nbsp;<tt>/=</tt>&nbsp;|&nbsp;<tt>+</tt>&nbsp;|&nbsp;<tt>-</tt>&nbsp;|&nbsp;<tt>*</tt>&nbsp;|&nbsp;<tt>div</tt>&nbsp;|&nbsp;<tt>mod</tt></td>
+</tr>
+
+
+
+</tbody></table>
+
+<p>Składnia powyższa jest niejednoznaczna. Przyjmujemy, że operatory binarne
+mają następujące priorytety i&nbsp;kierunki łączności:</p>
+
+<table class="prio">
+<tbody><tr>
+<td class="c"><b>Priorytet</b></td>
+<td class="c"><b>Łączność</b></td>
+<td class="c"><b>Operatory</b></td>
+</tr>
+<tr>
+<td class="r">1</td>
+<td class="c">w&nbsp;lewo</td>
+<td class="l"><tt>*</tt>, <tt>div</tt>, <tt>mod</tt></td>
+</tr>
+<tr>
+<td class="r">2</td>
+<td class="c">w&nbsp;lewo</td>
+<td class="l"><tt>+</tt>, <tt>-</tt></td>
+</tr>
+<tr>
+<td class="r">3</td>
+<td class="c">niełączny</td>
+<td class="l"><tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&lt;=</tt>, <tt>&gt;=</tt>, <tt>=</tt>, <tt>/=</tt></td>
+</tr>
+</tbody></table>
+
+<p>Wzorce są liniowe, tj.&nbsp;każda zmienna ma w&nbsp;głowie klauzuli
+dokładnie jedno wystąpienie.</p>
+
+<p>Klauzule definiujące jedną wartość muszą występować razem
+w&nbsp;programie. Nie wolno ich rozdzielać klauzulą definiującą inną
+wartość. Głowy wszystkich klauzul definiujących tę samą funkcję powinny
+zawierać tyle samo parametrów.</p>
+
+<h4>Semantyka</h4>
+
+<p>W&nbsp;języku występują liczby całkowite, struktury i&nbsp;funkcje.
+Język jest typowany dynamicznie, tzn.&nbsp;typ wartości jest sprawdzany
+dynamicznie podczas obliczania wyrażeń. Dane w&nbsp;tym języku
+przypominają dane w&nbsp;Prologu, nie ma jednak zmiennych logicznych,
+a&nbsp;mamy funkcje. Argumentami operatorów
+arytmetycznych i&nbsp;relacyjnych muszą być liczby całkowite.  Wynikami
+operacji arytmetycznych są liczby całkowite, a&nbsp;operatorów
+relacyjnych — konstruktory <tt>True</tt>/0 i&nbsp;<tt>False</tt>/0.
+Aplikować do argumentu można jedynie wyrażenia, których wartościami są
+funkcje. W&nbsp;razie naruszenia powyższych zasad a&nbsp;także
+jeśli podczas obliczania aplikacji funkcji głowa żadnej klauzuli
+nie dopasowuje się do argumentu, to obliczenie powinno
+zostać przerwane i&nbsp;należy wypisać odpowiedni komunikat
+diagnostyczny. Tak samo należy postąpić w&nbsp;razie dzielenia przez
+zero.</p>
+
+<p>Język, podobnie jak Haskell, jest <i>non-strict</i>. Wyrażenia należy więc obliczać leniwie. Jest pożądane lecz nie wymagane, by
+zaimplementować strategię obliczania wyrażeń ze spamiętywaniem
+i&nbsp;przyjąć zasadę <i>full laziness</i>.</p>
+
+<p>Interpreter ma wyznaczać wartość wyrażeń podanych w&nbsp;dyrektywie
+<tt>e:</tt>. Jeśli wartością wyrażenia jest funkcja, to do standardowego
+strumienia wyjściowego należy wypisać napis <tt>&lt;function&gt;</tt>.</p>
+
+<h4>Przykładowe programy</h4>
+
+<div class="program">-- Funkcje implementujące wyrażenia warunkowe i operacje logiczne
+
+if True x y = x;
+if False x y = y;
+
+and x y = if x y False;
+or x y = if x True y;
+not x = if x False True;
+</div>
+
+<br>
+
+<div class="program">-- Listy zbudowane za konstruktorów Cons/2 i Nil/0
+
+reverse = rev Nil where {
+   rev a Nil = a;
+   rev a (Cons x xs) = rev (Cons x a) xs;
+}
+
+length = len 0 where {
+   len n Nil = n;
+   len n (Cons x xs) = len (n+1) xs;
+}
+
+append Nil ys = ys;
+append (Cons x xs) ys = Cons x (append xs ys);
+
+even Nil = True;
+even (Cons x Nil) = False;
+even (Cons x (Cons y ys)) = even ys;
+
+head (Cons x xs) = x;
+
+tail (Cons x xs) = xs;
+</div>
+
+<br>
+
+<div class="program">-- Funkcje wyższych rzędów i&nbsp;rekursja
+
+app f g x = f (g x);
+
+curry f x y = f (Pair x y);
+uncurry g (Pair x y) = g x y;
+
+map f Nil = Nil;
+map f (Cons x xs) = Cons (f x) (map f xs);
+
+foldr f c Nil = c;
+foldr f c (Cons x xs) = f x (foldr f c xs);
+
+sort = foldr ins Nil where {
+   ins x Nil = Cons x Nil;
+   ins x (Cons y ys) =
+      if (x &lt; y)
+         (Cons x (Cons y ys))
+         (Cons y (ins x ys));
+}
+
+iterate f a = Cons a (iterate f (f a));
+
+filter p Nil = Nil;
+filter p (Cons x xs) = if (p x) (Cons x ys) ys where
+   ys = filter p xs;
+
+enumFrom n = Cons n (enumFrom (n+1));
+
+primes = map head (iterate sieve (enumFrom 2)) where
+   sieve (Cons x xs) = filter (\ y -&gt; y mod x /= 0) xs;
+
+zipWith f Nil ys = Nil;
+zipWith f xs Nil = Nil;
+zipWith f (Cons x xs) (Cons y ys) = Cons (f x y) (zipWith f xs ys);
+
+fib = Cons 1 (Cons 1 (zipWith (\ x -&gt; \ y -&gt; x+y) fib (tail fib)));
+</div>
+
+<p><i>Uwaga:</i> arność konstruktora jest określana w&nbsp;chwili jego
+obliczania. Do konstruktorów nie można więc stosować <i>η</i>-redukcji.
+Konstruktor we wzorcu i&nbsp;w&nbsp;wyrażeniu musi mieć
+<i>explicite</i> podane wszystkie argumenty (w&nbsp;Haskellu dzięki
+typom częściowa aplikacja jest zabroniona tylko dla konstruktorów we
+wzorcach, ale jest możliwa w&nbsp;wyrażeniach). Poniższa
+definicja jest jednak poprawna, bo w&nbsp;chwili aplikacji konstruktora
+<tt>Cons</tt> będzie on miał już oba parametry.</p>
+
+<div class="program">-- Dobrze!
+
+idlist = foldr Cons Nil;
+</div>
+
+
+
+
+</body></html>
