@@ -1,1 +1,0 @@
-Powinny działac wszytskie funkcje przykładowe (poza sortem), słabo przetestowane definicje lokalne, nie wiem czy język jest na pewno non-strict. Przykładowe funkcje w pliku start.ts. Interpreter właczamy kompilując plik twiskell.pl w prologu.
